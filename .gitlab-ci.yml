@@ -1,0 +1,32 @@
+
+stages:
+  - docker_build_and_push
+  - deploy_to_container
+variables:
+  DOCKER_REGISTRY_USER: "rldockerhub@gmail.com"
+  DOCKER_REGISTRY_PASSWORD: "Docker_hub" 
+  IMAGE_TAG: $CI_PIPELINE_IID
+
+docker_build_and_push:
+  before_script: []
+  stage: docker_build_and_push
+  image: docker:19.03
+  script:
+    - docker build -t userhubdocker1/tarix2:$IMAGE_TAG .
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker tag userhubdocker1/tarix2:$IMAGE_TAG userhubdocker1/tarix2:latest
+    - docker push userhubdocker1/tarix2:latest
+    - docker push userhubdocker1/tarix2:$IMAGE_TAG
+  tags:
+    - tarix:2
+
+deploy_to_container:
+  before_script: []
+  image: docker:19.03
+  stage: deploy_to_container
+  script: 
+    - docker stop tarixmanba_back_new || true
+    - docker rm tarixmanba_back_new || true
+    - docker run -d --name tarixmanba_back_new --network tarix -p 8008:8000  -v /tarixmanba_media/media/:/TarixManba/media/ userhubdocker1/tarix2:$IMAGE_TAG 
+  tags: 
+    - tarix:2

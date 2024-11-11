@@ -1,0 +1,10 @@
+venv
+.venv
+env
+.env
+__pycache__
+db.sqlite3
+.idea
+media
+staticfiles
+migrations
