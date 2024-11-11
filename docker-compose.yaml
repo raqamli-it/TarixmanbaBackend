@@ -1,44 +1,30 @@
+version: '3'
 
-
-version: '3.8'
 services:
   web:
     build: .
-    container_name: tarixmanba_back_new
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/TarixManba
-      - /files/tarixmanba_dj/staticfiles:/TarixManba/staticfiles
-      - /files/tarixmanba_dj/media:/TarixManba/media
+      - static_volume:/TarixManba/staticfiles
+      - media_volume:/TarixManba/mediafiles
     ports:
-      - "8008:8000"
-    restart: always
-    environment:
-      - TZ=Asia/Tashkent
-    networks:
-      - tarix
+      - "8000:8000"
     depends_on:
-      - db
+      - tarix_db
 
-  db:
-    image: postgres:16
-    container_name: tarixmanba_back-db
-    networks:
-      tarix:
-        ipv4_address: 10.254.0.11
-    volumes:
-      - /all_db/tarixmanba_dj/db:/var/lib/postgresql/data
-    restart: always
+  tarix_db:
+    image: postgres:latest
     environment:
-      TZ: Asia/Tashkent
-      POSTGRES_DB: tarixmanba_db
-      POSTGRES_USER: tarixmanba_user
-      POSTGRES_PASSWORD: tarixmanba_password
+      POSTGRES_DB: "tarixmanba_db"
+      POSTGRES_USER: "tarixmanba_user"
+      POSTGRES_PASSWORD: "tarixmanba_password"
+    ports:
+      - "5439:5432"
+    volumes:
+      - /all_db/tarixmanba_bd/db:/var/lib/postgresql/data
 
-networks:
-  tarix:
-    name: tarix
-    external: true
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

@@ -99,13 +99,14 @@ WSGI_APPLICATION = 'Config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tarixmanba_db',
-        'USER': 'tarixmanba_user',
-        'PASSWORD': 'tarixmanba_password',
-        'HOST': '10.254.0.23',
-        'PORT': '5432',
+        'NAME': 'tarixmanba_db',  # Baza nomi
+        'USER': 'tarixmanba_user',  # Foydalanuvchi nomi
+        'PASSWORD': 'tarixmanba_password',  # Foydalanuvchi paroli
+        'HOST': 'tarix_db',  # Baza xost nomi (Docker Compose'dagi xost nomi)
+        'PORT': '5432',  # PostgreSQLning standart porti
     }
 }
+
 
   # 'PASSWORD': 'tarixmanba_password',  
         # 'HOST': 'db',
