@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-(no#j@8q@)2)&e)=pdl$a5h*8gvn=%c8g*bt-3(g#&x3lk#$r&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['backend.tarixmanba.uz', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -149,11 +149,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = [BASE_DIR / 'static', ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://raqamli.tarixmanba.uz',
-    'https://raqamli.tarixmanba.uz',
+    'http://backend.tarixmanba.uz',
+    'https://backend.tarixmanba.uz',
 ]
 
-CSRF_COOKIE_DOMAIN = 'raqamli.tarixmanba.uz'
+CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
 
 # Agar SSL ishlatmasangiz, bu sozlamalarni False ga o'zgartiring
 CSRF_COOKIE_SECURE = False
