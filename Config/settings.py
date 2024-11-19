@@ -102,7 +102,7 @@ DATABASES = {
         'NAME': 'tarixmanba_db',  # Baza nomi
         'USER': 'tarixmanba_user',  # Foydalanuvchi nomi
         'PASSWORD': 'tarixmanba_password',  # Foydalanuvchi paroli
-        'HOST': 'tarix_db',  # Baza xost nomi (Docker Compose'dagi xost nomi)
+        'HOST': '93.188.84.132',  # Baza xost nomi (Docker Compose'dagi xost nomi)
         'PORT': '5432',  # PostgreSQLning standart porti
     }
 }
