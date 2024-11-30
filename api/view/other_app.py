@@ -97,7 +97,7 @@ def list_news(request):
     news_filter = NewsFilter(request.GET, queryset=News.objects.all().order_by("id"))
     result_page = paginator.paginate_queryset(news_filter.qs, request)
     serializer = NewsSerializer(result_page, many=True, context={'request': request})
-    return paginator.get_paginated_response(serializer)
+    return paginator.get_paginated_response(serializer.data)
 
 # Detail
 @api_view(['GET'])
