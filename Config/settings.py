@@ -56,13 +56,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'language-code',
-]
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'Config.urls'
 
@@ -158,6 +151,22 @@ CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
 # Agar SSL ishlatmasangiz, bu sozlamalarni False ga o'zgartiring
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'language-code',
+]
+
+
+CSRF_TRUSTED_ORIGINS = ['https://backend.tarixmanba.uz',]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://backend.tarixmanba.uz',
+# ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
