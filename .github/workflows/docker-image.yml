@@ -36,6 +36,8 @@ jobs:
           ssh -T -i ~/.ssh/id_rsa root@93.188.84.132 << EOF
             docker pull userhubdocker1/tarixmanba-backend
             docker stop tarixmanba-backend-container || true
-            docker rm tarixmanba-backend-container || true
-            docker run --name tarixmanba-backend-container -d -p 5500:5500 userhubdocker1/tarixmanba-backend
+            docker rm jadid-back-container || true
+            docker run --name tarixmanba-backend-container \
+              -v /home/tarix_lst/media:/TarixManba/media \
+              -d -p 5500:5500 userhubdocker1/tarixmanba-backend
           EOF
