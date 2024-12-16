@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from django.db.models import F
 
 # from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Location
@@ -143,7 +144,7 @@ def resourceDetailView(request, pk):
 
 @api_view(['GET'])
 def catResourceListView(request):
-    category = Category.objects.all().prefetch_related('resources')
+    category = Category.objects.all().order_by(F('order').asc(nulls_last=True))
     serializer = CategoryResourceListSerializer(category, many=True, context={'request': request})
     return Response(serializer.data)
 
