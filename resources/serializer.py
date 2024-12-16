@@ -337,8 +337,6 @@ class ResourceAdminSerializer(serializers.ModelSerializer):
 
 class CategoryResourceSerializer(serializers.ModelSerializer):
     resources = serializers.SerializerMethodField()
-    # icon = serializers.SerializerMethodField()
-    # image = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
