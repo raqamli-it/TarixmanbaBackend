@@ -141,10 +141,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = [BASE_DIR / 'static', ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://backend.tarixmanba.uz',
-    'https://backend.tarixmanba.uz',
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://backend.tarixmanba.uz',
+#     'https://backend.tarixmanba.uz',
+# ]
 
 CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
 
