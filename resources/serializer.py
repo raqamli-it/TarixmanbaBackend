@@ -359,7 +359,7 @@ class CategoryResourceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'title', 'icon', 'image']
+        fields = ['id', 'title', 'icon', 'image', 'order']
 
 
 # Behruz
