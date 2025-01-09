@@ -181,6 +181,13 @@ def resourceDetailView(request, pk):
 
 
 @api_view(['GET'])
+def catResourceListView(request):
+    category = Category.objects.all().order_by(F('order').asc(nulls_last=True))
+    serializer = CategoryResourceListSerializer(category, many=True, context={'request': request})
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def catResourceDetailView(request, pk):
     # Get the category object
     category = get_object_or_404(Category, pk=pk)
