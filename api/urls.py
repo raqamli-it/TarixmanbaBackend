@@ -2,11 +2,14 @@ from django.urls import path
 from api.view.other_app import about_detail, connection_value_detail,  feedbacks_detail, library_category_detail, library_detail, list_abouts, list_connection_value,  list_feedbacks, list_libraries, list_library_categories, list_news, list_sliders, news_detail, sliders_detail
 from api.view.resources import category_locations_view, categoryListView, categoryDetailView, periodFilterListView, periodFilterDetailView, \
     filterCategoriesListView, filterCategoriesDetailView, filtersListView, filtersDetailView, provinceListView, \
-    provinceDetailView, resourceListView, resourceDetailView, catResourceListView, catResourceDetailView
+    provinceDetailView, resourceListView, resourceDetailView, catResourceListView, catResourceDetailView, SearchView
 
 from resources.views import FilterCategoryAPIView, FiltersAPIView, PeriodFilterAPIView
 
 urlpatterns = [
+    path('search/', SearchView.as_view(), name='search'),
+
+
     # Library
     path('libraries/', list_libraries, name='list_libraries'),
     path('libraries/<int:pk>/', library_detail, name='library_detail'),

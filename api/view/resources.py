@@ -1,15 +1,53 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from django.db.models import F
+from django.db.models import F, Q
 
 # from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Location
 from resources.serializer import CategorySerializer, PeriodFilterSerializer, FilterCategoriesSerializer, \
     FiltersSerializer, ProvinceSerializer, ResourceSerializer, CategoryResourceSerializer, LocationSerializer, CategoryResourceListSerializer
+from other_app.models import Library
+from other_app.serializers import LibrariesSerializer
 
+class SearchView(APIView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '')  # URL parametridan 'q' ni olish
+
+        # Paginatsiya sozlamalari
+        paginator = PageNumberPagination()
+        paginator.page_size = 15  # Har bir sahifada 10 ta element ko'rsatiladi
+
+        if query:
+            # Agar qidiruv so'rovi mavjud bo'lsa
+            resource_results = Resource.objects.filter(
+                title__icontains=query  # Resource title bo'yicha
+            )
+
+            library_results = Library.objects.filter(
+                title__icontains=query  # Library title bo'yicha
+            )
+        else:
+            # Agar qidiruv so'rovi bo'lmasa, faqat bo'sh ro'yxatlar qaytaring
+            resource_results = Resource.objects.none()  # Hech qanday natija
+            library_results = Library.objects.none()  # Hech qanday natija
+
+        # Paginatsiya qilish
+        resource_page = paginator.paginate_queryset(resource_results, request)
+        library_page = paginator.paginate_queryset(library_results, request)
+
+        # Natijalarni serializatsiya qilish
+        resource_serializer = ResourceSerializer(resource_page, many=True)
+        library_serializer = LibrariesSerializer(library_page, many=True)
+
+        # Barcha natijalarni birlashtirib yuborish
+        return paginator.get_paginated_response({
+            'resources': resource_serializer.data,
+            'libraries': library_serializer.data
+        })
+    
 
 @api_view(['GET'])
 def categoryListView(request):
@@ -143,20 +181,14 @@ def resourceDetailView(request, pk):
 
 
 @api_view(['GET'])
-def catResourceListView(request):
-    category = Category.objects.all().order_by(F('order').asc(nulls_last=True))
-    serializer = CategoryResourceListSerializer(category, many=True, context={'request': request})
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
 def catResourceDetailView(request, pk):
     # Get the category object
     category = get_object_or_404(Category, pk=pk)
 
     # Get query parameters
     period_filter_id = request.GET.get('period_filter')
-    filter_ids = request.GET.getlist('filters')  # Expecting a list of filter IDs
+    filter_ids = request.GET.getlist('filters')
+    search_query = request.GET.get('search', '')
 
     # Filter by period_filter if provided
     if period_filter_id:
@@ -164,28 +196,32 @@ def catResourceDetailView(request, pk):
         if period_filter:
             resources = Resource.objects.filter(
                 category=category, period_filter=period_filter
-                ).select_related(
-                    'category', 'filter_category'
-                    ).prefetch_related(
-                        'files', 'audios', 'videos', 'galleries', 'attributes', 
-                        'contents', 'virtual_realities', 'locations'
-                        )
+            ).select_related(
+                'category', 'filter_category'
+            ).prefetch_related(
+                'files', 'audios', 'videos', 'galleries', 'attributes',
+                'contents', 'virtual_realities', 'locations'
+            )
         else:
             resources = Resource.objects.none()  # No matching filter found
     else:
         resources = Resource.objects.filter(
             category=category
-            ).select_related(
-                    'category', 'filter_category'
-                    ).prefetch_related(
-                        'files', 'audios', 'videos', 'galleries', 'attributes', 
-                        'contents', 'virtual_realities', 'locations'
-                        )
-
+        ).select_related(
+            'category', 'filter_category'
+        ).prefetch_related(
+            'files', 'audios', 'videos', 'galleries', 'attributes',
+            'contents', 'virtual_realities', 'locations'
+        )
 
     # Further filter by filters if provided
     if filter_ids:
         resources = resources.filter(filters__id__in=filter_ids).distinct()
+
+    if search_query:
+        resources = resources.filter(
+            Q(title__icontains=search_query)
+        ).distinct()
 
     paginator = PageNumberPagination()
     paginator.page_size = 20
