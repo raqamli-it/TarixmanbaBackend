@@ -194,3 +194,7 @@ class Location(models.Model):
     latitude = models.CharField(max_length=500, blank=True, null=True)
     longitude = models.CharField(max_length=500, blank=True, null=True)
 
+
+class Proba(models.Model):
+    title = models.CharField(max_length=255)
+
