@@ -69,6 +69,7 @@ class About(BaseModel):
 
 class Feedbacks(BaseModel):
     message = models.TextField()
+
     # user = models.ForiegnKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -85,9 +86,19 @@ class Comments(BaseModel):
 
 
 class Connection_Category(models.Model):
-    title= models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
 
 
 class Connection_Value(models.Model):
     connection_category = models.ForeignKey(Connection_Category, on_delete=models.CASCADE)
     value = models.CharField(max_length=255)
+
+
+class Employee(models.Model):
+    full_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='employee/')
+    degree = models.CharField(max_length=255)
+    order = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.full_name

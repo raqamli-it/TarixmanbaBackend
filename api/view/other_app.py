@@ -1,8 +1,6 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import generics
 from admin_panel.crud.about import AboutFilter
 from admin_panel.crud.connection_value import ConnectionValFilter
 from admin_panel.crud.feedback import FeedbackFilter
@@ -10,12 +8,13 @@ from admin_panel.crud.library import LibraryFilter
 from admin_panel.crud.library_category import LibraryCatFilter
 from admin_panel.crud.news import NewsFilter
 from admin_panel.crud.sliders import SlidersFilter
-from api.pagination import ResultsSetPagination
-from other_app.models import Comments, Connection, About, Connection_Value,  Feedbacks, Library_Category, Library, Sliders, News
-from other_app.serializers import AboutSerializer, CommentSerializer, ConnectionSerializer, ConnectionValueSerializer, FeedbackSerializer, LibrariesSerializer, NewsSerializer, LibrariesCategorySerializer, SlidersSerializer
-from rest_framework import filters
+from other_app.models import About, Connection_Value, Feedbacks, Library_Category, Library, \
+    Sliders, News, Employee
+from other_app.serializers import AboutSerializer, ConnectionValueSerializer, \
+    FeedbackSerializer, LibrariesSerializer, NewsSerializer, LibrariesCategorySerializer, SlidersSerializer, \
+    EmployeeListSerializer
 from rest_framework.pagination import PageNumberPagination
-from django_filters.rest_framework import DjangoFilterBackend
+
 
 # Library
 
@@ -28,6 +27,7 @@ def list_libraries(request):
     result_page = paginator.paginate_queryset(library_filter.qs, request)
     serializer = LibrariesSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
 
 # Detail
 @api_view(['GET'])
@@ -53,6 +53,7 @@ def list_library_categories(request):
     serializer = LibrariesCategorySerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 # Detail
 @api_view(['GET'])
 def library_category_detail(request, pk):
@@ -64,7 +65,8 @@ def library_category_detail(request, pk):
     serializer = LibrariesCategorySerializer(category)
     return Response(serializer.data)
 
-# About    
+
+# About
 
 # Read (O'qish)
 @api_view(['GET'])
@@ -76,7 +78,8 @@ def list_abouts(request):
     serializer = AboutSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-# Detail 
+
+# Detail
 @api_view(['GET'])
 def about_detail(request, pk):
     try:
@@ -86,7 +89,7 @@ def about_detail(request, pk):
 
     serializer = AboutSerializer(about)
     return Response(serializer.data)
-    
+
 
 # News
 # Read (O'qish)
@@ -98,6 +101,7 @@ def list_news(request):
     result_page = paginator.paginate_queryset(news_filter.qs, request)
     serializer = NewsSerializer(result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)
+
 
 # Detail
 @api_view(['GET'])
@@ -142,6 +146,7 @@ def list_sliders(request):
     serializer = SlidersSerializer(result_page, many=True, context={'request': request})
     return paginator.get_paginated_response(serializer.data)
 
+
 @api_view(['GET'])
 def sliders_detail(request, pk):
     try:
@@ -151,6 +156,7 @@ def sliders_detail(request, pk):
 
     serializer = SlidersSerializer(slider, many=False, context={'request': request})
     return Response(serializer.data)
+
 
 # Read (O'qish)
 @api_view(['GET'])
@@ -162,6 +168,7 @@ def list_connection_value(request):
     serializer = ConnectionValueSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 # Detail
 @api_view(['GET'])
 def connection_value_detail(request, pk):
@@ -172,7 +179,8 @@ def connection_value_detail(request, pk):
 
     serializer = ConnectionValueSerializer(connection)
     return Response(serializer.data)
-    
+
+
 # feedbacks
 # Read (O'qish)
 @api_view(['GET'])
@@ -184,6 +192,7 @@ def list_feedbacks(request):
     serializer = FeedbackSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 # Detail
 @api_view(['GET'])
 def feedbacks_detail(request, pk):
@@ -194,3 +203,13 @@ def feedbacks_detail(request, pk):
 
     serializer = FeedbackSerializer(feedback)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def list_employee(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    connections_val_filter = ConnectionValFilter(request.GET, queryset=Employee.objects.all().order_by("order"))
+    result_page = paginator.paginate_queryset(connections_val_filter.qs, request)
+    serializer = EmployeeListSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
