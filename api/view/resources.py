@@ -238,7 +238,7 @@ def catResourceDetailView(request, pk):
     serialized_data = resource_serializer.data
 
     # Serialize period filters data
-    period_filters = PeriodFilter.objects.filter(category=category)
+    period_filters = PeriodFilter.objects.filter(category=category).order_by('order')
     period_filter_serializer = PeriodFilterSerializer(period_filters, many=True, context={'request': request})
 
     # Serialize filter categories data

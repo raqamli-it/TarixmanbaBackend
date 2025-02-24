@@ -70,7 +70,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class PeriodFilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeriodFilter
-        fields = ('id', 'title')
+        fields = ('id', 'title', 'order')
 
 
 class FilterCategoriesSerializer(serializers.ModelSerializer):

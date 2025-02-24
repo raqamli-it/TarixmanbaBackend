@@ -29,7 +29,7 @@ class PeriodFilter(BaseModel):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True,
                                  related_name='category_filter')
-
+    order = models.IntegerField(default=0)
     class Meta:
         verbose_name = 'Period Filter'
         verbose_name_plural = 'Period Filters'
