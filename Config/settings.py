@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-(no#j@8q@)2)&e)=pdl$a5h*8gvn=%c8g*bt-3(g#&x3lk#$r&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['93.188.84.132', 'backend.tarixmanba.uz', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['93.188.84.132', 'backend.tarixmanba.uz', '127.0.0.1', 'localhost', "subdomain.eskitoshkent.uz"]
 
 # Application definition
 
@@ -146,7 +146,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static', ]
 #     'https://backend.tarixmanba.uz',
 # ]
 
-CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
+CSRF_COOKIE_DOMAIN = 'subdomain.eskitoshkent.uz'
+# CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
 
 # Agar SSL ishlatmasangiz, bu sozlamalarni False ga o'zgartiring
 CSRF_COOKIE_SECURE = False
@@ -160,7 +161,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 
-CSRF_TRUSTED_ORIGINS = ['https://backend.tarixmanba.uz',]
+CSRF_TRUSTED_ORIGINS = ['http://subdomain.eskitoshkent.uz',]
+# CSRF_TRUSTED_ORIGINS = ['https://backend.tarixmanba.uz',]
 # CORS_ALLOWED_ORIGINS = [
 #     'https://backend.tarixmanba.uz',
 # ]
