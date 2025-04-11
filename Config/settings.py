@@ -146,8 +146,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static', ]
 #     'https://backend.tarixmanba.uz',
 # ]
 
-CSRF_COOKIE_DOMAIN = 'subdomain.eskitoshkent.uz'
-# CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
+# CSRF_COOKIE_DOMAIN = 'subdomain.eskitoshkent.uz'
+CSRF_COOKIE_DOMAIN = 'backend.tarixmanba.uz'
 
 # Agar SSL ishlatmasangiz, bu sozlamalarni False ga o'zgartiring
 CSRF_COOKIE_SECURE = False
@@ -161,8 +161,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 
-CSRF_TRUSTED_ORIGINS = ['http://subdomain.eskitoshkent.uz',]
-# CSRF_TRUSTED_ORIGINS = ['https://backend.tarixmanba.uz',]
+# CSRF_TRUSTED_ORIGINS = ['http://subdomain.eskitoshkent.uz',]
+CSRF_TRUSTED_ORIGINS = ['https://backend.tarixmanba.uz',]
 # CORS_ALLOWED_ORIGINS = [
 #     'https://backend.tarixmanba.uz',
 # ]
