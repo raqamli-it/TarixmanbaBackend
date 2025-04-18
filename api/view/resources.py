@@ -8,46 +8,40 @@ from django.db.models import F, Q
 # from admin_panel.serializer.resources import ResourceAdminSerializer
 from resources.models import Category, PeriodFilter, FilterCategories, Filters, Province, Resource, Location
 from resources.serializer import CategorySerializer, PeriodFilterSerializer, FilterCategoriesSerializer, \
-    FiltersSerializer, ProvinceSerializer, ResourceSerializer, CategoryResourceSerializer, LocationSerializer, CategoryResourceListSerializer
+    FiltersSerializer, ProvinceSerializer, ResourceSerializer, CategoryResourceSerializer, LocationSerializer, \
+    CategoryResourceListSerializer
 from other_app.models import Library
 from other_app.serializers import LibrariesSerializer
 
+from itertools import chain
+
+
 class SearchView(APIView):
     def get(self, request, *args, **kwargs):
-        query = request.GET.get('q', '')  # URL parametridan 'q' ni olish
+        query = request.GET.get('q', '')
 
-        # Paginatsiya sozlamalari
         paginator = PageNumberPagination()
-        paginator.page_size = 15  # Har bir sahifada 10 ta element ko'rsatiladi
+        paginator.page_size = 15
 
         if query:
-            # Agar qidiruv so'rovi mavjud bo'lsa
-            resource_results = Resource.objects.filter(
-                title__icontains=query  # Resource title bo'yicha
-            )
-
-            library_results = Library.objects.filter(
-                title__icontains=query  # Library title bo'yicha
-            )
+            resource_results = Resource.objects.filter(title__icontains=query)
+            library_results = Library.objects.filter(title__icontains=query)
         else:
-            # Agar qidiruv so'rovi bo'lmasa, faqat bo'sh ro'yxatlar qaytaring
-            resource_results = Resource.objects.none()  # Hech qanday natija
-            library_results = Library.objects.none()  # Hech qanday natija
+            resource_results = Resource.objects.none()
+            library_results = Library.objects.none()
 
-        # Paginatsiya qilish
-        resource_page = paginator.paginate_queryset(resource_results, request)
-        library_page = paginator.paginate_queryset(library_results, request)
+        # Avval alohida serialize qilamiz
+        resource_serializer = ResourceSerializer(resource_results, many=True)
+        library_serializer = LibrariesSerializer(library_results, many=True)
 
-        # Natijalarni serializatsiya qilish
-        resource_serializer = ResourceSerializer(resource_page, many=True)
-        library_serializer = LibrariesSerializer(library_page, many=True)
+        # Ikkalasini birlashtiramiz
+        combined_results = list(chain(resource_serializer.data, library_serializer.data))
 
-        # Barcha natijalarni birlashtirib yuborish
-        return paginator.get_paginated_response({
-            'resources': resource_serializer.data,
-            'libraries': library_serializer.data
-        })
-    
+        # Endi birlashtirilgan natijalarni paginate qilamiz
+        paginated_results = paginator.paginate_queryset(combined_results, request)
+
+        return paginator.get_paginated_response(paginated_results)
+
 
 @api_view(['GET'])
 def categoryListView(request):
@@ -159,9 +153,9 @@ def resourceListView(request):
 
     # select_related va prefetch_related yordamida resurslarni oldindan yuklash
     resources = Resource.objects.select_related('category', 'filter_category') \
-                                .prefetch_related(
-                                    'files', 'audios', 'videos', 'galleries', 'attributes', 'contents', 'virtual_realities', 'locations'
-                                )
+        .prefetch_related(
+        'files', 'audios', 'videos', 'galleries', 'attributes', 'contents', 'virtual_realities', 'locations'
+    )
     result_page = paginator.paginate_queryset(resources, request)
     serializer = ResourceSerializer(result_page, many=True, context={'request': request})
 
