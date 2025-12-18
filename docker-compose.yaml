@@ -6,8 +6,8 @@ services:
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/TarixManba
-      - static_volume:/TarixManba/staticfiles
-      - media_volume:/TarixManba/mediafiles
+      - /home/username/backup/volumes/tarixmanbabackend_static_volume:/TarixManba/staticfiles
+      - /home/username/backup/volumes/tarixmanbabackend_media_volume:/TarixManba/mediafiles
     ports:
       - "8000:8000"
     depends_on:
